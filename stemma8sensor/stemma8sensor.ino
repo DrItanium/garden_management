@@ -54,15 +54,16 @@ void tcaselect(uint8_t i) {
   Wire.endTransmission();
 }
 
-template<typename T>
-void foreachSeesaw(T fn) {
+// grrr, can't use a template here since I get compiler errors
+using SeesawFunc = void (*)(Adafruit_seesaw&, int);
+void foreachSeesaw(SeesawFunc fn) {
     for (int i = 0; i < 8; ++i) {
         tcaselect(i);
         fn(ss[i], i);
     }
 }
 
-void setup()   {                
+void setup()   { 
   foreachSeesaw([](Adafruit_seesaw& ss, int index) { ssActive[index] = ss.begin(SEESAW_ADDR); });
   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3D);  // initialize with the I2C addr 0x3D (for the 128x64)
