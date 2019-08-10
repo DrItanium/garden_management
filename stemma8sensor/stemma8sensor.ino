@@ -54,7 +54,8 @@ void tcaselect(uint8_t i) {
   Wire.endTransmission();
 }
 
-// grrr, can't use a template here since I get compiler errors
+// grrr, can't use a template here since I get compiler errors, it is a compiler error
+// with gcc 5.4.0
 using SeesawFunc = void (*)(Adafruit_seesaw&, int);
 void foreachSeesaw(SeesawFunc fn) {
     for (int i = 0; i < 8; ++i) {
