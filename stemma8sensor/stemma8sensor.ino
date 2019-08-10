@@ -45,8 +45,6 @@ Adafruit_SSD1306 display(OLED_RESET);
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
 #endif
 
-using SeesawFunction = decltype([](Adafruit_seesaw&, int) -> void);
-
 void tcaselect(uint8_t i) {
   if (i > 7) {
     return;
