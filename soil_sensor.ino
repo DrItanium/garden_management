@@ -31,41 +31,32 @@ Adafruit_seesaw ss;
 constexpr int rs = 7, en = 8, d4 = 9, d5 = 10, d6 = 11, d7 = 12;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
-// comment next line to enable serial console output
-#define NO_SERIAL
+template<typename T>
+void printAt(int x, int y, T toPrint) noexcept {
+    lcd.setCursor(x, y);
+    lcd.print(toPrint);
+}
 
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-#ifndef NO_SERIAL
-  Serial.begin(9600);
-  Serial.println("Bringing up display");
-#endif
-  lcd.begin(16,2);
-  if (!ss.begin(0x36)) {
-    lcd.print("ERROR! no seesaw");    
-    while(1);
-  } 
-  
-  lcd.setCursor(0,0);
-  lcd.print("Moisture: ");
-  lcd.setCursor(0,1);
-  lcd.print("Temp: ");
+    // initialize digital pin LED_BUILTIN as an output.
+    lcd.begin(16,2);
+    if (!ss.begin(0x36)) {
+        printAt(0, 0, "ERROR! no seesaw");
+        while(1);
+    } 
+    printAt(0, 0, "Moisture: ");
+    printAt(0, 1, "Temp: ");
 }
 
 // the loop function runs over and over again forever
 void loop() {  
-  float tempC = ss.getTemp();
-  uint16_t capread = ss.touchRead(0);
-  lcd.setCursor(10,0);
-  lcd.print("      ");
-  lcd.setCursor(10,0);
-  lcd.print(capread);
-  lcd.setCursor(6,1);  
-  lcd.print("          ");
-  lcd.setCursor(6,1);  
-  lcd.print(tempC);
+    float tempC = ss.getTemp();
+    uint16_t capread = ss.touchRead(0);
+    printAt(10, 0, "      ");
+    printAt(10, 0, capread);
+    printAt(6, 1, "          ");
+    printAt(6, 1, tempC);
 
 
-  delay(500);
-  
+    delay(500);
 }
