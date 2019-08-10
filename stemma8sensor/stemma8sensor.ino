@@ -45,6 +45,8 @@ Adafruit_SSD1306 display(OLED_RESET);
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
 #endif
 
+using SeesawFunction = decltype([](Adafruit_seesaw&, int) -> void);
+
 void tcaselect(uint8_t i) {
   if (i > 7) {
     return;
@@ -54,11 +56,16 @@ void tcaselect(uint8_t i) {
   Wire.endTransmission();
 }
 
+template<typename T>
+void foreachSeesaw(T fn) {
+    for (int i = 0; i < 8; ++i) {
+        tcaselect(i);
+        fn(ss[i], i);
+    }
+}
+
 void setup()   {                
-  for (int i = 0; i < 8; ++i) {
-    tcaselect(i);
-    ssActive[i] = ss[i].begin(SEESAW_ADDR);
-  }
+  foreachSeesaw([](Adafruit_seesaw& ss, int index) { ssActive[index] = ss.begin(SEESAW_ADDR); });
   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3D);  // initialize with the I2C addr 0x3D (for the 128x64)
   // init done
@@ -84,24 +91,22 @@ void loop() {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
-  for (int i =0; i < 8; ++i) {
-    
-      tcaselect(i);
+  foreachSeesaw([](Adafruit_seesaw& ss, int i) {
       display.print("Sensor ");
       display.print(i);
       display.print(": ");
       if (ssActive[i]) {
-        auto moisture = ss[i].touchRead(0);
+        auto moisture = ss.touchRead(0);
         if (moisture == 0xFFFF) {
           display.println("no connect!");
         } else {
           display.println(moisture);
         }
       } else {
-        ssActive[i] = ss[i].begin(SEESAW_ADDR);
+        ssActive[i] = ss.begin(SEESAW_ADDR);
         display.println("inactive!!!");
       }
-  }
+  });
   display.display();
   delay(500);
 }
