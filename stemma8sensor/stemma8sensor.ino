@@ -74,16 +74,17 @@ void foreachSeesaw(SeesawFunc fn) {
 
 
 void setup()   { 
-  foreachSeesaw([](Adafruit_seesaw& ss, int index) { ssActive[index] = ss.begin(SEESAW_ADDR); });
+ 
   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3D);  // initialize with the I2C addr 0x3D (for the 128x64)
-  // init done
+  
   
   // Show image buffer on the display hardware.
   // Since the buffer is intialized with an Adafruit splashscreen
   // internally, this will display the splashscreen.
   display.display();
   delay(1000);
+  foreachSeesaw([](Adafruit_seesaw& ss, int index) { ssActive[index] = ss.begin(SEESAW_ADDR); });
 }
 
 void loop() {
@@ -106,8 +107,8 @@ void loop() {
       } else {
         ssActive[i] = ss.begin(SEESAW_ADDR);
         display.println("no sensor!");
-      }
+      }      
   });
   display.display();
-  delay(500);
+  delay(100);
 }
