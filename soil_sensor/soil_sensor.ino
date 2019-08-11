@@ -55,8 +55,9 @@ void setup() {
 void loop() {  
     float tempC = ss.getTemp();
     uint16_t capread = ss.touchRead(0);
+    auto rangeMappedCap = map(capread, 200, 1016, 0, 100);
     printAt(10, 0, "      ");
-    printAt(10, 0, capread);
+    printAt(10, 0, rangeMappedCap);
     printAt(6, 1, "          ");
     printAt(6, 1, tempC);
 
