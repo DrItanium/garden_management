@@ -41,8 +41,11 @@ void setup() {
     // initialize digital pin LED_BUILTIN as an output.
     lcd.begin(16,2);
     if (!ss.begin(0x36)) {
-        printAt(0, 0, "ERROR! no seesaw");
-        while(1);
+        do {
+          printAt(0, 0, "No soil sensor!");
+          delay(100);  
+          
+        } while (!ss.begin(0x36));        
     } 
     printAt(0, 0, "Moisture: ");
     printAt(0, 1, "Temp: ");
