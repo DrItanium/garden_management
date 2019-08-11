@@ -84,15 +84,7 @@ void setup()   {
   // internally, this will display the splashscreen.
   display.display();
   delay(1000);
-
-  // Show the display buffer on the hardware.
-  // NOTE: You _must_ call display after making any drawing commands
-  // to make them visible on the display hardware!
-  display.display();
-  delay(2000);
-  display.clearDisplay();
 }
-
 
 void loop() {
 
@@ -104,16 +96,16 @@ void loop() {
       display.print("Sensor ");
       display.print(i);
       display.print(": ");
-      if (ssActive[i]) {
+      if (ssActive[i]) {     
         auto moisture = ss.touchRead(0);
         if (moisture == 0xFFFF) {
           display.println("no connect!");
         } else {
-          display.println(moisture);
-        }
+          display.println(map(moisture, 200, 1016, 0, 100));
+        }          
       } else {
         ssActive[i] = ss.begin(SEESAW_ADDR);
-        display.println("inactive!!!");
+        display.println("no sensor!");
       }
   });
   display.display();
