@@ -56,13 +56,22 @@ void tcaselect(uint8_t i) {
 
 // grrr, can't use a template here since I get compiler errors, it is a compiler error
 // with gcc 5.4.0
+
+// requires avr-gcc 8.3.0
+
+#if _GNUC_ > 5
+template<typename T>
+void foreachSeesaw(typename T fn) {
+#else
 using SeesawFunc = void (*)(Adafruit_seesaw&, int);
 void foreachSeesaw(SeesawFunc fn) {
+#endif // __GNUC__ != 5
     for (int i = 0; i < 8; ++i) {
         tcaselect(i);
         fn(ss[i], i);
     }
 }
+
 
 void setup()   { 
   foreachSeesaw([](Adafruit_seesaw& ss, int index) { ssActive[index] = ss.begin(SEESAW_ADDR); });
